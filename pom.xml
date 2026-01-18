@@ -5,7 +5,7 @@
 
 	<groupId>event-hub</groupId>
 	<artifactId>event-hub-publisher</artifactId>
-	<version>${version}</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>event-hub-publisher</name>
@@ -14,14 +14,9 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.6.RELEASE</version>
+		<version>4.0.1</version> <!-- Use the latest version -->
+		<relativePath/> <!-- lookup parent project from repository -->
 	</parent>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.8</java.version>
-		<docker.image.prefix>gcr.io/${env.GOOGLE_CLOUD_PROJECT}</docker.image.prefix>
-	</properties>
 
 	<dependencies>
 		<dependency>
@@ -44,29 +39,14 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>event-hub</groupId>
+			<artifactId>event-hub-model</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.google.cloud</groupId>
 			<artifactId>google-cloud-pubsub</artifactId>
-			<version>1.84.0</version>
+			<version>1.105.0</version>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>com.google.cloud.tools</groupId>
-				<artifactId>jib-maven-plugin</artifactId>
-				<version>1.4.0</version>
-				<configuration>
-					<to>
-						<image>${docker.image.prefix}/${project.artifactId}:${project.version}</image>
-						<credHelper>gcr</credHelper>
-					</to>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>
