@@ -1,0 +1,17 @@
+{
+  "id": 1,
+  "organization": {
+    "id": 1
+  },
+  "source": {
+    "id": 1
+  },
+  "workspace": {
+    "id": 1
+  },
+  "timestamp": "2026-01-19T01:23:25Z",
+  "payload": "{\n  \"metadata\": {\n    \"sensor_id\": \"SOIL-PROBE-4492\",\n    \"timestamp\": \"2026-01-18T14:30:00Z\",\n    \"location\": {\n      \"lat\": 41.8781,\n      \"lon\": -87.6298\n    },\n    \"firmware_version\": \"v2.1.4\"\n  },\n  \"readings\": {\n    \"moisture\": {\n      \"value\": 24.5,\n      \"unit\": \"%\",\n      \"status\": \"optimal\"\n    },\n    \"soil_temp\": {\n      \"value\": 18.2,\n      \"unit\": \"°C\"\n    },\n    \"conductivity\": {\n      \"value\": 1.2,\n      \"unit\": \"mS/cm\",\n      \"description\": \"EC\"\n    },\n    \"ph_level\": {\n      \"value\": 6.8,\n      \"unit\": \"pH\"\n    },\n    \"nutrients\": {\n      \"nitrogen\": 45,\n      \"phosphorus\": 12,\n      \"potassium\": 38,\n      \"unit\": \"mg/kg\"\n    }\n  },\n  \"device_health\": {\n    \"battery_level\": 88,\n    \"signal_strength\": -92,\n    \"solar_charging\": true\n  }\n}",
+  "eventDefinition": {
+    "id": 1
+  }
+}

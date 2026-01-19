@@ -5,5 +5,5 @@ evenhub:
       schemaApiEndpoint: http://localhost:8082
       publisherApiEndpoint: http://localhost:8083
   pubsub:
-    project: my-local-project
+    project: local-project
     topic: event-hub-topic

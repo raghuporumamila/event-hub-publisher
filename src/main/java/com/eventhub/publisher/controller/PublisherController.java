@@ -10,6 +10,9 @@ import javax.annotation.PreDestroy;
 
 import com.eventhub.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.gax.core.NoCredentialsProvider;
+import com.google.api.gax.grpc.InstantiatingGrpcChannelProvider;
+import io.grpc.ManagedChannelBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -19,23 +22,15 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.eventhub.publisher.config.ConfigProperties;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsub.v1.Publisher;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.ProjectTopicName;
 import com.google.pubsub.v1.PubsubMessage;
@@ -55,16 +50,14 @@ public class PublisherController {
 	private String daoApiEndpoint;
 	@Value("${evenhub.rest.client.schemaApiEndpoint}")
 	private String schemaApiEndpoint;
-	@Value("${evenhub.rest.client.publisherApiEndpoint}")
-	private String publisherApiEndpoint;
 
 	@Autowired
 	private ObjectMapper objectMapper;
 
 	@PostConstruct
 	public void init() throws Exception {
-		ProjectTopicName topicName = ProjectTopicName.of(project, topic);
-		publisher = Publisher.newBuilder(topicName).build();
+		System.out.println("topic == " + topic);
+
 	}
 
 	@PreDestroy
@@ -78,6 +71,22 @@ public class PublisherController {
 	public void publish(@RequestBody Event event) throws Exception {
 
 		List<ApiFuture<String>> futures = new ArrayList<>();
+		ProjectTopicName topicName = ProjectTopicName.of(project, topic);
+		System.out.println(topicName);
+		publisher = Publisher.newBuilder(topicName).build();
+
+		String hostport = "localhost:8085";
+		InstantiatingGrpcChannelProvider channelProvider =
+				InstantiatingGrpcChannelProvider.newBuilder()
+						.setEndpoint(hostport)
+						.setChannelConfigurator(ManagedChannelBuilder::usePlaintext)
+						.build();
+
+		publisher = Publisher.newBuilder(topicName)
+				.setChannelProvider(channelProvider)
+				.setCredentialsProvider(NoCredentialsProvider.create()) // No auth needed
+				.build();
+
 		try {
 			/*
 			String url = daoApiEndpoint + "/organizations/" + event.getOrganization().getId();
@@ -97,8 +106,9 @@ public class PublisherController {
 					new ParameterizedTypeReference<EventDefinition>() {
 					}).getBody();
 
+			//event.setEventDefinition(definition);
 			HttpHeaders headers1 = new HttpHeaders();
-			headers1.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			headers1.setContentType(MediaType.APPLICATION_JSON);
 
 			ValidateJsonData validateJsonData = new ValidateJsonData();
 			validateJsonData.setPayload(event.getPayload());
