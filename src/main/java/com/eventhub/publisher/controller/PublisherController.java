@@ -106,7 +106,7 @@ public class PublisherController {
 					new ParameterizedTypeReference<EventDefinition>() {
 					}).getBody();
 
-			//event.setEventDefinition(definition);
+			event.setEventDefinition(definition);
 			HttpHeaders headers1 = new HttpHeaders();
 			headers1.setContentType(MediaType.APPLICATION_JSON);
 
